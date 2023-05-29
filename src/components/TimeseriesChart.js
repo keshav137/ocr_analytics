@@ -26,7 +26,6 @@ import {
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers-pro";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { chart } from "highcharts";
 
 ChartJS.register(
   CategoryScale,
@@ -113,7 +112,7 @@ const getOptions = (category) => {
 };
 
 const TimeseriesChart = () => {
-  const now = new Date();
+  let now = new Date();
   const defaultStart = new Date(new Date().setDate(now.getDate() - 7));
 
   const [amountChartData, setAmountChartData] = useState({});
@@ -138,7 +137,7 @@ const TimeseriesChart = () => {
   const fetchBusinessIds = async () => {
     try {
       const response = await axios.get(
-        "http://138.197.208.92:5000/api/business_ids"
+        "http://127.0.0.1:8000/api/business_ids"
       );
       const result = response.data;
       setBusinessIdOptions(result);
@@ -158,12 +157,12 @@ const TimeseriesChart = () => {
   const fetchChartData = async (chartType) => {
     try {
       const data = {
-        start_time: startDate,
-        end_time: endDate,
+        start_time: new Date(startDate.setUTCHours(0, 0, 0, 0)),
+        end_time: new Date(endDate.setUTCHours(0, 0, 0, 0)),
         business_id: businessId,
       };
       const response = await axios.post(
-        "http://138.197.208.92:5000/api/" + chartType + "data",
+        "http://127.0.0.1:8000/api/" + chartType + "data",
         data
       );
       const result = response.data;
@@ -172,7 +171,6 @@ const TimeseriesChart = () => {
       // aggregating the values for records with the same timestamp
       result.forEach(function (record) {
         let tsString = record.ts;
-        console.log(tsString);
         if (!(tsString in labelMap)) {
           labelMap[tsString] = {
             totalAmounts: [],
@@ -195,7 +193,11 @@ const TimeseriesChart = () => {
         avgOcrScores = [],
         medianOcrScores = [];
 
-      Object.keys(labelMap).forEach(function (key) {
+      const sortedLabels = Object.keys(labelMap).sort(function (a, b) {
+        return new Date(a) - new Date(b);
+      });
+
+      sortedLabels.forEach(function (key) {
         labels.push(key);
         let amount = labelMap[key].totalAmounts.reduce(
           (partialSum, a) => partialSum + a,
@@ -334,12 +336,12 @@ const TimeseriesChart = () => {
             <DatePicker
               label="Start Date"
               value={dayjs(startDate)}
-              onChange={(newValue) => setStartDate(newValue)}
+              onChange={(newValue) => setStartDate(newValue.$d)}
             />
             <DatePicker
               label="End Date"
               value={dayjs(endDate)}
-              onChange={(newValue) => setEndDate(newValue)}
+              onChange={(newValue) => setEndDate(newValue.$d)}
             />
           </LocalizationProvider>
           <ToggleButtonGroup
