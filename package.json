@@ -1,6 +1,7 @@
 {
   "name": "ocr_analytics",
   "version": "0.1.0",
+  "homepage": "https://keshav137.github.io/ocr_analytics-gh-pages",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.0",
@@ -17,6 +18,7 @@
     "chartjs-plugin-zoom": "^2.0.1",
     "dayjs": "^1.11.7",
     "faker": "^6.6.6",
+    "gh-pages": "^5.0.0",
     "highcharts": "^11.0.1",
     "moment": "^2.29.4",
     "react": "^18.2.0",
@@ -29,6 +31,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
