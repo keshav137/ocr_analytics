@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers-pro";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { chart } from "highcharts";
 
 ChartJS.register(
   CategoryScale,
@@ -75,12 +76,6 @@ const getOptions = (category) => {
           size: 8,
         },
       },
-      xAxis2: {
-        type: "time",
-        time: {
-          unit: "hour",
-        },
-      },
       xAxis3: {
         type: "time",
         time: {
@@ -126,7 +121,7 @@ const TimeseriesChart = () => {
   const [avgOcrScoreChartData, setAvgOcrScoreChartData] = useState({});
   const [medianScoreChartData, setMedianScoreChartData] = useState({});
   const [medianOcrScoreChartData, setMedianOcrScoreChartData] = useState({});
-  const [chartType, setChartType] = useState("minute");
+  const [chartType, setChartType] = useState("hour");
   const [businessIdOptions, setBusinessIdOptions] = useState([]);
   const [businessId, setBusinessId] = useState(DEFAULT_BUSINESS);
   const [startDate, setStartDate] = useState(defaultStart);
@@ -150,6 +145,16 @@ const TimeseriesChart = () => {
     } catch {}
   };
 
+  const getAverage = (arr) => {
+    return (
+      Math.round(
+        (arr.reduce((partialSum, a) => partialSum + parseFloat(a), 0) /
+          arr.length) *
+          100
+      ) / 100
+    );
+  };
+
   const fetchChartData = async (chartType) => {
     try {
       const data = {
@@ -162,15 +167,53 @@ const TimeseriesChart = () => {
         data
       );
       const result = response.data;
-      const labels = result.map((record) => {
-        return new Date(record.ts);
-      });
-      const amounts = result.map((record) => record.total_amount);
-      const avgScores = result.map((record) => record.avg_score);
-      const medianScores = result.map((record) => record.median_score);
+      const labelMap = {};
 
-      const avgOcrScores = result.map((record) => record.avg_ocr_score);
-      const medianOcrScores = result.map((record) => record.median_ocr_score);
+      // aggregating the values for records with the same timestamp
+      result.forEach(function (record) {
+        let tsString = record.ts;
+        console.log(tsString);
+        if (!(tsString in labelMap)) {
+          labelMap[tsString] = {
+            totalAmounts: [],
+            avgScores: [],
+            medianScores: [],
+            avgOcrScores: [],
+            medianOcrScores: [],
+          };
+        }
+        labelMap[tsString].totalAmounts.push(record.total_amount);
+        labelMap[tsString].avgScores.push(record.avg_score);
+        labelMap[tsString].medianScores.push(record.median_score);
+        labelMap[tsString].avgOcrScores.push(record.avg_ocr_score);
+        labelMap[tsString].medianOcrScores.push(record.median_ocr_score);
+      });
+      let labels = [],
+        amounts = [],
+        avgScores = [],
+        medianScores = [],
+        avgOcrScores = [],
+        medianOcrScores = [];
+
+      Object.keys(labelMap).forEach(function (key) {
+        labels.push(key);
+        let amount = labelMap[key].totalAmounts.reduce(
+          (partialSum, a) => partialSum + a,
+          0
+        );
+        amounts.push(amount);
+        let avgScore = getAverage(labelMap[key].avgScores);
+        avgScores.push(avgScore);
+
+        let medianScore = getAverage(labelMap[key].medianScores);
+        medianScores.push(medianScore);
+
+        let avgOcrScore = getAverage(labelMap[key].avgOcrScores);
+        avgOcrScores.push(avgOcrScore);
+
+        let medianOcrScore = getAverage(labelMap[key].medianOcrScores);
+        medianOcrScores.push(medianOcrScore);
+      });
 
       setAmountChartData({
         labels,
@@ -184,12 +227,11 @@ const TimeseriesChart = () => {
           },
         ],
       });
-
       setAvgScoreChartData({
         labels,
         datasets: [
           {
-            label: "Average scores",
+            label: "Average score",
             data: avgScores,
             fill: false,
             borderColor: "rgb(75, 192, 192)",
@@ -202,7 +244,7 @@ const TimeseriesChart = () => {
         labels,
         datasets: [
           {
-            label: "Average OCR scores",
+            label: "Average ocr score",
             data: avgOcrScores,
             fill: false,
             borderColor: "rgb(75, 192, 192)",
@@ -215,7 +257,7 @@ const TimeseriesChart = () => {
         labels,
         datasets: [
           {
-            label: "Median scores",
+            label: "Median score",
             data: medianScores,
             fill: false,
             borderColor: "rgb(75, 192, 192)",
@@ -228,7 +270,7 @@ const TimeseriesChart = () => {
         labels,
         datasets: [
           {
-            label: "Median OCR scores",
+            label: "Median ocr score",
             data: medianOcrScores,
             fill: false,
             borderColor: "rgb(75, 192, 192)",
@@ -328,13 +370,13 @@ const TimeseriesChart = () => {
         />
         <Line
           className="chart"
-          options={getOptions("avgOcrScore")}
-          data={avgOcrScoreChartData}
+          options={getOptions("medianScore")}
+          data={medianScoreChartData}
         />
         <Line
           className="chart"
-          options={getOptions("medianScore")}
-          data={medianScoreChartData}
+          options={getOptions("avgOcrScore")}
+          data={avgOcrScoreChartData}
         />
         <Line
           className="chart"
