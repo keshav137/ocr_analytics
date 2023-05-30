@@ -78,13 +78,13 @@ These minutely analytics are updated every 5 mins and hourly analytics are updat
 
 ## Part 5
 
-To scale this system, I would use Apache Kafka to process all the ml responses from the application servers.
+To scale this system, I would use Apache Kafka to ingest all the ml responses from the ML application servers.
 
-This data will be then be processed by Airflow DAGs(similar to the ones listed above) - aggregated and persisted to a NoSQL database(which can easily be scaled horizontally).
+This data will be then be processed by Airflow DAGs(similar to the ones listed above) - aggregated and persisted to a NoSQL database(which can easily be scaled horizontally), which will then serve data to the frontend.
 
 ![Alt text](./assets/scalable_design.png "Design")
 
-The Airflow instance can be scaled using Celery Executor to distribute tasks across multiple workers. For near real-time analytics, a stream processing system like Apache Flink can also be used as it can consume data from Kafka, process it in real-time, and write the results back to a database. For proper monitoring and alerting, tools like Prometheus and Grafana can be used for maintaining the health of the system and catching issues early.
+The Airflow instance can be scaled using Celery Executor to distribute tasks across multiple workers. For proper monitoring and alerting, tools like Prometheus and Grafana can be used for maintaining the health of the system and catching issues early.
 
 ## Additional notes
 
