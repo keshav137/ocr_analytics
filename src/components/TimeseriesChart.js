@@ -309,88 +309,89 @@ const TimeseriesChart = () => {
       <meta
         http-equiv="Content-Security-Policy"
         content="upgrade-insecure-requests"
-      />
-      <div className="filter-panel">
-        <FormControl
-          fullWidth
-          className="form"
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "10px",
-          }}
-          onSubmit={(event) => event.preventDefault()}
-        >
-          <InputLabel>Business</InputLabel>
-          <Select
-            sx={{ minWidth: 120 }}
-            value={businessId}
-            onChange={(event) => setBusinessId(event.target.value)}
-            autoWidth
-            label="Business"
+      >
+        <div className="filter-panel">
+          <FormControl
+            fullWidth
+            className="form"
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "10px",
+            }}
+            onSubmit={(event) => event.preventDefault()}
           >
-            {businessIdOptions.length ? (
-              businessIdOptions.map((option) => (
-                <MenuItem value={option}>{option}</MenuItem>
-              ))
-            ) : (
-              <MenuItem value={null}>None</MenuItem>
-            )}
-          </Select>
-          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
-            <DatePicker
-              label="Start Date"
-              value={dayjs(startDate)}
-              onChange={(newValue) => setStartDate(newValue.$d)}
-            />
-            <DatePicker
-              label="End Date"
-              value={dayjs(endDate)}
-              onChange={(newValue) => setEndDate(newValue.$d)}
-            />
-          </LocalizationProvider>
-          <ToggleButtonGroup
-            color="primary"
-            value={chartType}
-            exclusive
-            onChange={(event) => setChartType(event.target.value)}
-            aria-label="Platform"
-          >
-            <ToggleButton value="minute">Minute</ToggleButton>
-            <ToggleButton value="hour">Hour</ToggleButton>
-          </ToggleButtonGroup>
-          <Button variant="outlined" onClick={handleFilter} size="medium">
-            Generate
-          </Button>
-        </FormControl>
-      </div>
-      <div className="chart-container">
-        <Line
-          className="chart"
-          options={getOptions("amount")}
-          data={amountChartData}
-        />
-        <Line
-          className="chart"
-          options={getOptions("avgScore")}
-          data={avgScoreChartData}
-        />
-        <Line
-          className="chart"
-          options={getOptions("medianScore")}
-          data={medianScoreChartData}
-        />
-        <Line
-          className="chart"
-          options={getOptions("avgOcrScore")}
-          data={avgOcrScoreChartData}
-        />
-        <Line
-          className="chart"
-          options={getOptions("medianOcrScore")}
-          data={medianOcrScoreChartData}
-        />
-      </div>
+            <InputLabel>Business</InputLabel>
+            <Select
+              sx={{ minWidth: 120 }}
+              value={businessId}
+              onChange={(event) => setBusinessId(event.target.value)}
+              autoWidth
+              label="Business"
+            >
+              {businessIdOptions.length ? (
+                businessIdOptions.map((option) => (
+                  <MenuItem value={option}>{option}</MenuItem>
+                ))
+              ) : (
+                <MenuItem value={null}>None</MenuItem>
+              )}
+            </Select>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
+              <DatePicker
+                label="Start Date"
+                value={dayjs(startDate)}
+                onChange={(newValue) => setStartDate(newValue.$d)}
+              />
+              <DatePicker
+                label="End Date"
+                value={dayjs(endDate)}
+                onChange={(newValue) => setEndDate(newValue.$d)}
+              />
+            </LocalizationProvider>
+            <ToggleButtonGroup
+              color="primary"
+              value={chartType}
+              exclusive
+              onChange={(event) => setChartType(event.target.value)}
+              aria-label="Platform"
+            >
+              <ToggleButton value="minute">Minute</ToggleButton>
+              <ToggleButton value="hour">Hour</ToggleButton>
+            </ToggleButtonGroup>
+            <Button variant="outlined" onClick={handleFilter} size="medium">
+              Generate
+            </Button>
+          </FormControl>
+        </div>
+        <div className="chart-container">
+          <Line
+            className="chart"
+            options={getOptions("amount")}
+            data={amountChartData}
+          />
+          <Line
+            className="chart"
+            options={getOptions("avgScore")}
+            data={avgScoreChartData}
+          />
+          <Line
+            className="chart"
+            options={getOptions("medianScore")}
+            data={medianScoreChartData}
+          />
+          <Line
+            className="chart"
+            options={getOptions("avgOcrScore")}
+            data={avgOcrScoreChartData}
+          />
+          <Line
+            className="chart"
+            options={getOptions("medianOcrScore")}
+            data={medianOcrScoreChartData}
+          />
+        </div>
+      </meta>
     </div>
   );
 };
