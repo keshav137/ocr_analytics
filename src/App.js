@@ -4,7 +4,7 @@ import TimeseriesChart from "./components/TimeseriesChart";
 function App() {
   return (
     <div className="App">
-      <h2>OCR Analytics</h2>
+      <h2>OCR_Analytics</h2>
       <TimeseriesChart />
     </div>
   );
