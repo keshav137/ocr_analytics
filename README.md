@@ -1,6 +1,6 @@
 # OCR Analytics
 
-[React app for real time analytics]()
+[React app for real time analytics](https://keshav137.github.io/ocr_analytics/)
 
 [Airflow instance](http://138.197.208.92:8080/home)
 
@@ -22,7 +22,7 @@ I setup an instance of Apache airflow using docker compose on my virtual machine
 ## Part 3
 
 I created 2 new tables in PostgresSQL called `hourly_parsed_total` and `minutely_parsed_total` for storing analytics data shown below:
-TODO add image
+![Alt text](./table_shapes.jpg?raw=true "Title")
 
 I added the following 2 DAGs in the Airflow instance to parse the past data from `documents` table and write it into the 2 new tables created above.
 
