@@ -113,7 +113,8 @@ const getOptions = (category) => {
 
 const TimeseriesChart = () => {
   let now = new Date();
-  const defaultStart = new Date(new Date().setDate(now.getDate() - 7));
+  now.setDate(now.getDate() + 1);
+  const defaultStart = new Date(new Date().setDate(now.getDate() - 1));
 
   const [amountChartData, setAmountChartData] = useState({});
   const [avgScoreChartData, setAvgScoreChartData] = useState({});

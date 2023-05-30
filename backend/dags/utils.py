@@ -9,7 +9,7 @@ DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://keshav137:*****@138.197.208.92:5432/veryfidev"
 )
 engine = create_engine(DATABASE_URI)
-batch_size = 5000
+BATCH_SIZE = 5000
 BUSINESS_IDS = ["walgreens", "cvs", "traderjoes", "safeway", "walmart"]
 
 
@@ -75,14 +75,19 @@ def get_random_payload_str():
 
 
 """
+Method to process data from `documents` table in batches and upsert aggregated values into 
+`minutely_parsed_total` or `hourly_parsed_total` tables
+
 Parameters
 ----------
 interval : 'minute' or 'hour'
-    Specifies what type of aggregation to use
+    Specifies whether data is being processed for `minutely_parsed_total` table
+    or `hourly_parsed_total` table
 for_live : boolean
     Whether this processing is for live data or past data
-duration : Number of minutes in the past to process data for when processing is for live data
-    
+duration : string
+    Number of minutes in the past to process data for, when processing is for live data
+    When processing minutely data, this is set to 5, and for hourly data its set to 60
 """
 
 
@@ -94,21 +99,21 @@ def process_data(interval, for_live, duration):
             sql = "SELECT COUNT(*) FROM documents"
         result = connection.execute(sql)
         total_rows = result.fetchone()[0]
-        for offset in range(0, total_rows, batch_size):
+        for offset in range(0, total_rows, BATCH_SIZE):
             if for_live:
                 sql = f"""
-          SELECT * FROM documents
-          WHERE timestamp >= NOW() - INTERVAL '{duration} minutes'
-          ORDER BY timestamp DESC;
-        """
+                        SELECT * FROM documents
+                        WHERE timestamp >= NOW() - INTERVAL '{duration} minutes'
+                        ORDER BY timestamp DESC;
+                    """
             else:
                 sql = text(
                     f"""
-          SELECT * FROM documents
-          ORDER BY timestamp DESC 
-          LIMIT {batch_size} 
-          OFFSET {offset}
-        """
+                        SELECT * FROM documents
+                        ORDER BY timestamp DESC 
+                        LIMIT {BATCH_SIZE} 
+                        OFFSET {offset}
+                    """
                 )
             result = connection.execute(sql)
             batch_data = result.fetchall()
