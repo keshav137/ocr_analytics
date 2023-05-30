@@ -82,6 +82,8 @@ To scale this setup, I would use a NoSQL database to store the document records,
 
 The rest of the setup would be the same, as I am processing live data in batches and significantly reducing the number of records stored during aggregation.
 
+![Alt text](./assets/scalable_design.png "Design")
+
 ## Additional notes
 
 All the files related to the backend for this project including the airflow dags are contained in the `backend` folder under this repo.
