@@ -306,6 +306,10 @@ const TimeseriesChart = () => {
 
   return (
     <div className="container">
+      <meta
+        http-equiv="Content-Security-Policy"
+        content="upgrade-insecure-requests"
+      />
       <div className="filter-panel">
         <FormControl
           fullWidth
