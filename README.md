@@ -21,6 +21,7 @@ I setup an instance of Apache airflow using docker compose on my virtual machine
 ## Part 3
 
 I created 2 new tables in PostgresSQL called `hourly_parsed_total` and `minutely_parsed_total` for storing analytics data shown below:
+
 ![Alt text](./assets/table_shapes.jpg "Table shapes")
 
 I added the following 2 DAGs in the Airflow instance to parse the past data from `documents` table and write it into the 2 new tables created above.
@@ -78,3 +79,7 @@ User can compare analytic values across different businesses (by opening this ap
 To scale this setup, I would use a NoSQL database to store the document records, since it can be easily scaled horizontally to multiple nodes and support extensive number of reads and writes. The current setup does perform well for 500,000 records added per day but cost of scaling this SQL db would be higher than that of scaling a NoSQL db horizontally.
 
 The rest of the setup would be the same, as I am processing live data in batches and significantly reducing the number of records stored during aggregation.
+
+## Additional notes
+
+All the files related to the backend for this project are contained in the `backend` folder under this repo.
