@@ -163,7 +163,7 @@ const TimeseriesChart = () => {
         business_id: businessId,
       };
       const response = await axios.post(
-        "http:/138.197.208.92:5000/api/" + chartType + "data",
+        "http://138.197.208.92:5000/api/" + chartType + "data",
         data
       );
       const result = response.data;
