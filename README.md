@@ -21,7 +21,7 @@ I setup an instance of Apache airflow using docker compose on my virtual machine
 ## Part 3
 
 I created 2 new tables in PostgresSQL called `hourly_parsed_total` and `minutely_parsed_total` for storing analytics data shown below:
-![Alt text](./../assets/table_shapes.jpg?raw=true "Table shapes")
+![Alt text](./assets/table_shapes.jpg "Table shapes")
 
 I added the following 2 DAGs in the Airflow instance to parse the past data from `documents` table and write it into the 2 new tables created above.
 
