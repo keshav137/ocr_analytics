@@ -10,7 +10,7 @@
 
 I setup a PostgresSQL instance using Docker on a linux virtual machine. In this instance, I created a database named `veryfidev`, and in this db, I created a table named `documents` (contains a `document_id` and an `ml_response` along with a `timestamp` column). I also added an index for this table where data is ordered by descending values of timestamp column, so that this data can be easily processed in batches in the right order.
 
-Then I wrote a python script called `generate_data.py` ([link](https://github.com/keshav137/ocr_analytics/blob/main/backend/scripts/generate_data.py)) which adds 1 row per second for the past 1 week to the `documents` table, starting today(May 29). Each record contains 9 `line_items` which are generated randomly. These `line_items` are aggregated and stored in the `total` field inside the `ml_response` column. The aggregation function for `values` in `line_items` is `sum` and the for `scores` and `ocr_scores` is `mean`.
+Then I wrote a python script called `generate_data.py` ([link](https://github.com/keshav137/ocr_analytics/blob/main/backend/scripts/generate_data.py), [link](https://github.com/keshav137/ocr_analytics/blob/main/backend/scripts/helpers.py)) which adds 1 row per second for the past 1 week to the `documents` table, starting today(May 29). Each record contains 9 `line_items` which are generated randomly. These `line_items` are aggregated and stored in the `total` field inside the `ml_response` column. The aggregation function for `values` in `line_items` is `sum` and that for `scores` and `ocr_scores` is `mean`.
 
 This script added 604,800 rows as sample data for the past 1 week (24 x 60 x 60 x 7) in the `documents` table.
 
@@ -32,7 +32,7 @@ I added the following 2 DAGs in the Airflow instance to parse the past data from
 
 This DAG processes the past data from the `documents` table in batches, aggregates the data for each minute into one record and writes it to the `minutely_parsed_total` table.
 
-The records are grouped by `business_id` so user can query analytics data for different businesses and compare their values. Each record stores aggregated values for total_amount, avg_score, avg_ocr_score, median_score, median_ocr_score along with the associated timestamp(where seconds value is stripped) and the business_id.
+The records are grouped by `business_id` so user can query analytics data for different businesses and compare their values. Each record stores aggregated values for total_amount, avg_score, avg_ocr_score, median_score, median_ocr_score, along with the associated timestamp(where seconds value is stripped) and the business_id.
 
 ### Hourly Dag
 
@@ -70,11 +70,11 @@ The Flask API is running in tmux and is documented in this file:
 [link](https://github.com/keshav137/ocr_analytics/blob/main/backend/scripts/server.py)
 
 The user can filter the data by start date, end date and businessId, and also pick the type of analytics(either `hour` or `minute`) to plot.
-By default the app shows analytics from last week till today.
+By default the app shows analytics from yesterday and today's values.
 
 User can compare analytic values across different businesses (by opening this app in multiple tabs and picking different filters).
 
-These minutely analytics are updated every 5 mins and hourly analytics are updated every 1 hour, which is reflected in the charts.
+These minutely analytics are updated every 5 mins and hourly analytics are updated every 1 hour in the live DAGs mentioned above. The new data processed by the DAGs is shown in these charts in near real time.
 
 ## Part 5
 
