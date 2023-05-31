@@ -19,6 +19,7 @@
     "dayjs": "^1.11.7",
     "faker": "^6.6.6",
     "highcharts": "^11.0.1",
+    "https": "^1.0.0",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
