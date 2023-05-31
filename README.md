@@ -4,6 +4,14 @@
 
 [Airflow instance](http://138.197.208.92:8080/home)
 
+## For Local Setup
+
+1. Make sure node + npm is installed on your system.
+2. Run `npm install` to install all the project dependencies.
+3. Run `npm start` to start the build server.
+
+It will open up localhost:3000 on your local browser.
+
 # Design
 
 ## Part 1
