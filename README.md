@@ -5,7 +5,7 @@ React app for real time analytics
 
 [Airflow instance](http://138.197.208.92:8080/home)
 
-## For Local Setup
+## React app local setup instructions
 
 1. Make sure node + npm is installed on your system.
 2. Run `npm install` to install all the project dependencies.
