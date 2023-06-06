@@ -1,6 +1,6 @@
 # OCR Analytics
 
-[React app for real time analytics](https://keshav137.github.io/ocr_analytics/)
+React app for real time analytics
 ![Alt text](./assets/demo_screen.png "Demo")
 
 [Airflow instance](http://138.197.208.92:8080/home)
